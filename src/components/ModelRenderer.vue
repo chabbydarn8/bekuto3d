@@ -4,6 +4,7 @@ import type { ShapeWithColor } from '~/types/three-types'
 import { OrbitControls } from '@tresjs/cientos'
 import { TresCanvas } from '@tresjs/core'
 import { Box3, Vector3 } from 'three'
+import { useCsg } from '../composables/useCsg'
 
 interface ModelSize {
   width: number
@@ -40,6 +41,7 @@ const props = defineProps<{
   materialConfig: MaterialConfig
   controlsConfig: ControlsConfig
   zFighting: boolean
+  strawTopperMode: boolean
 }>()
 
 const emit = defineEmits<{
@@ -59,6 +61,8 @@ const cameraPosition = defineModel<[number, number, number]>('cameraPosition', {
 
 const groupRef = useTemplateRef<Group>('group')
 const modelGroup = computed(() => toRaw(groupRef.value))
+
+const { subtractCylinder } = useCsg()
 
 /**
  * 解决 Z-fighting 问题
@@ -233,6 +237,9 @@ defineExpose({
             curveSegments,
           }]"
         />
+        <template v-if="strawTopperMode">
+          <primitive :object="subtractCylinder(new THREE.ExtrudeGeometry(item.shape, { depth: item.depth, bevelEnabled: false, curveSegments }))" />
+        </template>
         <TresMeshPhongMaterial
           :color="item.color"
           :opacity="item.opacity"

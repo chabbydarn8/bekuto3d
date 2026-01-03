@@ -13,6 +13,7 @@ import ModelRenderer from './ModelRenderer.vue'
 const defaultDepth = 2
 const defaultSize = 37
 const curveSegments = ref(64) // 模型曲线部分的细分程度
+const isStrawTopperMode = ref(false)
 
 // 组件状态
 const fileName = ref('')
@@ -289,6 +290,7 @@ const isLoaded = computed(() => svgShapes.value.length && !isDefaultSvg.value)
     :z-fighting="!isExporting"
     :scale="scale"
     :curve-segments="curveSegments"
+    :straw-topper-mode="isStrawTopperMode"
     :material-config="{
       shininess: 100, // 增加高光度
       transparent: true,
@@ -371,6 +373,10 @@ const isLoaded = computed(() => svgShapes.value.length && !isDefaultSvg.value)
         />
         <div flex-1 />
         <div>unit: <span text-blue>mm</span></div>
+      </div>
+      <div class="flex items-center">
+        <input id="straw-topper-mode" v-model="isStrawTopperMode" type="checkbox" class="mr-2">
+        <label for="straw-topper-mode">Straw Topper Mode</label>
       </div>
       <div flex="~ col">
         <div
